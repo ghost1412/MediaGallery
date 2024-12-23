@@ -1,0 +1,231 @@
+<html>
+<head>
+    <title>Media Files</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #007BFF;
+            margin-top: 40px;
+        }
+
+        h2 {
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+
+        .preview {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .preview:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .preview img, .preview video {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .preview a {
+            display: block;
+            padding: 10px;
+            text-align: center;
+            background-color: #007BFF;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            border-top: 2px solid #ddd;
+            border-radius: 0 0 8px 8px;
+            transition: background-color 0.3s;
+        }
+
+        .preview a:hover {
+            background-color: #0056b3;
+        }
+
+        .folder-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .folder-item {
+            background-color: #28a745;
+            color: white;
+            border-radius: 8px;
+            padding: 20px;
+            width: 200px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out, background-color 0.3s;
+        }
+
+        .folder-item:hover {
+            transform: translateY(-5px);
+            background-color: #218838;
+        }
+
+        .folder-item a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .folder-item a:hover {
+            text-decoration: underline;
+        }
+
+        .download-btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background-color: #218838;
+        }
+
+        .nav-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .nav-buttons a {
+            padding: 12px 20px;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-buttons a:hover {
+            background-color: #0056b3;
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            background-color: #f1f1f1;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
+            .preview img, .preview video {
+                height: 150px;
+            }
+
+            .folder-list {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .folder-item {
+                width: 100%;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Media Files</h1>
+    
+    <h2>Directories</h2>
+    <div class="folder-list">
+        <!-- Dynamically filled directory links -->
+        {% for directory in directories %}
+            <div class="folder-item">
+                <a href="/directory/{{ directory|urlencode }}">{{ directory }}</a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <h2>Images</h2>
+    <div class="container">
+        <!-- Dynamically filled images with thumbnails -->
+        {% for image in images %}
+            <div class="preview">
+                <a href="/view_image/{{ image|urlencode }}">
+                    <img src="/thumbnails/{{ image|urlencode }}" alt="{{ image }}">
+                </a>
+                <a href="/media/{{ image|urlencode }}" class="download-btn" download>Download</a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <h2>Videos</h2>
+    <div class="container">
+        <!-- Dynamically filled videos -->
+        {% for video in videos %}
+            <div class="preview">
+                <video controls>
+                    <source src="/media/{{ video|urlencode }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <a href="/media/{{ video|urlencode }}">Watch Video</a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- <div class="nav-buttons">
+        <a href="#" class="btn">Download All</a>
+    </div> -->
+
+    <div class="footer">
+        <p>&copy; 2024 Media Files Application</p>
+    </div>
+</body>
+</html>
